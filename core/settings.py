@@ -104,6 +104,11 @@ DATABASES = {
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
+ACTIVE_CAMPAIGN_URL= os.getenv('ACTIVE_CAMPAIGN_URL')
+ACTIVE_CAMPAIGN_KEY= os.getenv('ACTIVE_CAMPAIGN_KEY')
+
+
+
 if not DEBUG:
     # react frotontend and django
     CORS_ORIGIN_WHITELIST = [
