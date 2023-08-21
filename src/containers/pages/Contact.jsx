@@ -1,13 +1,92 @@
-import React from "react";
+import React, { useState } from "react";
 import { MailIcon, PhoneIcon } from "@heroicons/react/outline";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import FullWithLayout from "hocs/layouts/FullWithLayout";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { toast } from 'react-toastify'
+import { Switch } from '@headlessui/react'
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
 
 function Contact() {
 
+  const [agreed, setAgreed] = useState (false)
+  const [loading, setLoading] = useState(false)
+
+  // form variables
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+    phone: '',
+    budget: '',
+  });
+
+  // form fields
+  const { 
+    name,
+    email,
+    subject,
+    message,
+    phone,
+    budget 
+  } = formData;
   
+  // form setting fields
+  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  // *** on Submit 
+  const onSubmit = e => {
+    e.preventDefault();
+
+    if(agreed){
+      setLoading(true);
+
+      const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+      };
+
+      const formData = new FormData()
+
+      formData.append('name', name)
+      formData.append('email', email)
+      formData.append('subject', subject)
+      formData.append('message', message)
+      formData.append('phone', phone)
+      formData.append('budget', budget)
+
+      const fetchData = async () => {
+        // POST
+        axios.post(`${process.env.REACT_APP_API_URL}/api/contacts/`, formData, config)
+        .then(res => {
+          
+          setLoading(false);
+          toast.success("Mensaje enviado correctamente, estaremos en contacto muy pronto")
+          
+        })
+        .catch(err => {
+          
+          setLoading(false);
+          toast.error("Error al enviar mensaje")
+        }) 
+      }
+
+      fetchData()
+
+
+    }else {
+      toast.error("Debes aceptar los terminos y politica de privacidad")
+    }
+  }
+  // --- END submit
+
   return (
     <FullWithLayout>
       <div className="relative bg-white">
@@ -71,23 +150,25 @@ function Contact() {
             </div>
           </div>
           {/* ------------------------------------- */}
-          {/* FOrm */}
+          {/* *** FOrm */}
           <div className="bg-white py-16 px-4 sm:px-6 lg:col-span-3 lg:py-24 lg:px-8 xl:pl-12">
             <div className="max-w-lg mx-auto lg:max-w-none">
+
               <form
+                onSubmit={e=>onSubmit(e)}
                 action="#"
                 method="POST"
                 className="grid grid-cols-1 gap-y-6"
               >
                 <div>
-                  <label htmlFor="full-name" className="sr-only">
+                  <label className="sr-only">
                     Full name
                   </label>
                   <input
                     type="text"
-                    name="full-name"
-                    id="full-name"
-                    autoComplete="name"
+                    name='name'
+                    value={name}
+                    onChange={e=>onChange(e)}
                     className="block w-full shadow-sm py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                     placeholder="Full name"
                   />
@@ -97,10 +178,10 @@ function Contact() {
                     Email
                   </label>
                   <input
-                    id="email"
                     name="email"
+                    value={email}
+                    onChange={e=>onChange(e)}
                     type="email"
-                    autoComplete="email"
                     className="block w-full shadow-sm py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                     placeholder="Email"
                   />
@@ -110,36 +191,104 @@ function Contact() {
                     Phone
                   </label>
                   <input
-                    type="text"
                     name="phone"
-                    id="phone"
-                    autoComplete="tel"
+                    value={phone}
+                    onChange={e=>onChange(e)}
+                    type="number"
                     className="block w-full shadow-sm py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                     placeholder="Phone"
                   />
+                </div>
+                <div>
+                  <label className="sr-only">
+                    Subject
+                  </label>
+                  <input
+                    type="text"
+                    name='subject'
+                    value={subject}
+                    onChange={e=>onChange(e)}
+                    className="block w-full shadow-sm py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+                    placeholder="Subject"
+                    />
                 </div>
                 <div>
                   <label htmlFor="message" className="sr-only">
                     Message
                   </label>
                   <textarea
-                    id="message"
                     name="message"
+                    value={message}
+                    onChange={e=>onChange(e)}
+                    placeholder="Message"
                     rows={4}
                     className="block w-full shadow-sm py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md"
-                    placeholder="Message"
                     defaultValue={""}
                   />
                 </div>
                 <div>
-                  <button
-                    type="submit"
-                    className="inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    Submit
-                  </button>
+                            <label className="block text-sm font-gilroy-medium text-gray-700">
+                                Presupuesto (opcional)
+                            </label>
+                            <select
+                                name="budget"
+                                onChange={e=>onChange(e)}
+                                value={budget}
+                                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                                defaultValue="Canada"
+                            >
+                                <option value="" disabled selected>Presupuesto?</option>
+                                <option value="0-5,000">$0 - $5,000</option>
+                                <option value="5,000-10,000">$5,000 - $10,000</option>
+                                <option value="10,000+">$10,000+</option>
+                            </select>
+                        </div>
+
+                        <Switch 
+                          checked={agreed}
+                          onChange={setAgreed}
+                          className={classNames(
+                            agreed ? 'bg-blue-600' : 'bg-gray-200',
+                            'relative inline-flex flex-shrink-0 h-6 w-11 border-2 dark:text-dark-txt border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+                            )}
+                        >
+                          <span className="sr-only">Acepta las politicas</span>
+                          <span
+                            aria-hidden="true"
+                            className={classNames(
+                                agreed ? 'translate-x-5' : 'translate-x-0',
+                                'inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200'
+                            )}
+                            />
+
+                        </Switch>
+
+                {/* *** Submit button */}
+                <div>
+                {
+                  loading ?
+                    
+                      <button
+                        className="inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      >
+                        Loading
+                      </button>
+                    
+                :
+                 
+                    <button
+                      type="submit"
+                      className="inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Submit
+                    </button>
+                  
+                }
                 </div>
+                {/* --- END submit */}
               </form>
+          {/* --- END FOrm */}
+
             </div>
           </div>
         </div>
