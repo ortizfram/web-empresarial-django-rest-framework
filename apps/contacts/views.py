@@ -87,7 +87,7 @@ class ContactCreateView(APIView):
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
             
-# *** Add to TAGs (ACTIVE CAMPAIGN)
+# *** Add to TAGs 'contact' || ACTIVE CAMPAIGN
             url = activecampaign_url + '/api/3/contactTags'
             data = {
                 'contactTag': {
@@ -102,7 +102,7 @@ class ContactCreateView(APIView):
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
 
-# *** Add to list (ACTIVE CAMPAIGN)
+# *** Add to list 'master' || ACTIVE CAMPAIGN
             url = activecampaign_url + '/api/3/contactLists'
             data = {
                 'contactList': {
@@ -181,8 +181,24 @@ class DemoAddListView(APIView):
                     {'error': 'Something went wrong when adding tag to contact'},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
+# *** Add TAG 'entrenamiento'
+            url = activecampaign_url + '/api/3/contactTags'
+            data = {
+                'contactTag': {
+                    'contact': contact_id,
+                    'tag': '2'
+                }
+            }
 
-# *** Add to LIST 'demo prod'
+            response = requests.post(url, json=data, headers=headers)
+
+            if response.status_code != 201 and response.status_code != 200:
+                return Response(
+                    {'error': 'Something went wrong when adding tag to contact'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+
+# *** Add to LIST 'demo prod' || ACTIVE CAMPAIGN
             url = activecampaign_url + '/api/3/contactLists'
             data = {
                 'contactList': {
@@ -199,6 +215,25 @@ class DemoAddListView(APIView):
                     {'error': 'Something went wrong when adding contact to master list'},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
+            
+# *** Add to list 'master' || ACTIVE CAMPAIGN
+            url = activecampaign_url + '/api/3/contactLists'
+            data = {
+                'contactList': {
+                    'list': '1',
+                    'contact': contact_id,
+                    'status': '1'
+                }
+            }
+
+            response = requests.post(url, json=data, headers=headers)
+
+            if response.status_code != 201 and response.status_code != 200:
+                return Response(
+                    {'error': 'Something went wrong when adding contact to master list'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+
 
             return Response(
                     {'success': 'Contact added to free ebook email list'},
@@ -209,3 +244,4 @@ class DemoAddListView(APIView):
                 {'error': 'Something went wrong on our server'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+     
