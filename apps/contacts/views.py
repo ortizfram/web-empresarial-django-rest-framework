@@ -25,22 +25,24 @@ class ContactCreateView(APIView):
 
 # *** Send Email
         try:
+            
             send_mail(
-                    subject,
-                    'Name '
-                +   name
-                +   '\nEmail: '
-                +   email
-                +   '\nMessage:\n'
-                +   message
-                +   '\nPhone: '
-                +   phone
-                +   '\n\nBudget: '
-                +   budget,
+                subject,
+                'Name '
+                + name
+                + '\nEmail: '
+                + email
+                + '\n\nMessage:\n'
+                + message
+                + '\nPhone: '
+                + phone
+                + '\n\nBudget: '
+                + budget,
                 'ortizfranco48@yahoo.com',
                 ['ortizfranco48@yahoo.com'],
-                fail_silently=False,
+                fail_silently=False
             )
+            
 
 # *** CREATE CONTACT
             Contact.objects.create(
@@ -74,7 +76,7 @@ class ContactCreateView(APIView):
                     {'error': 'Something went wrong when creating contact'},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
-            
+
             contact = response.json()
 
             try:
@@ -94,7 +96,6 @@ class ContactCreateView(APIView):
                 }
             }
             response = requests.post(url, json=data, headers=headers)
-
             if response.status_code != 201 and response.status_code != 200:
                 return Response(
                     {'error': 'Something went wrong when adding tag to contact'},
