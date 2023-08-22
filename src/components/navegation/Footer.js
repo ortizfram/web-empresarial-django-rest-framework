@@ -1,3 +1,8 @@
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+
 const navigation = {
   solutions: [
     { name: 'Marketing', href: '#' },
@@ -89,6 +94,54 @@ const navigation = {
 }
 
 export default function Footer() {
+
+    const navigate = useNavigate();
+
+    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+      email: "",
+    });
+    const { email } = formData;
+
+    const onChange = (e) =>
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    const onSubmit = (e) => {
+      e.preventDefault();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    
+    // process form data
+    const formData = new FormData();
+    formData.append("email", email);
+
+
+    // Fetch post
+    const fetchData = async () => {
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/api/contacts/newsletter`,
+          formData,
+          config
+        )
+        .then((res) => {
+          toast.success('Thanks for Subscribing! ❤️')
+        })
+        .catch((err) => {
+          setLoading(false);
+          toast.error("Error al enviar mensaje");
+        });
+    };
+
+    fetchData();
+  };
+
+
   return (
     <footer className="bg-white" aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">
@@ -157,15 +210,15 @@ export default function Footer() {
             <p className="mt-4 text-base text-gray-500">
               The latest news, articles, and resources, sent to your inbox weekly.
             </p>
-            <form className="mt-4 sm:flex sm:max-w-md">
+            <form onSubmit={e=>onSubmit(e)} className="mt-4 sm:flex sm:max-w-md">
               <label htmlFor="email-address" className="sr-only">
                 Email address
               </label>
               <input
                 type="email"
-                name="email-address"
-                id="email-address"
-                autoComplete="email"
+                name="email"
+                value={email}
+                onChange={e=>onChange(e)}
                 required
                 className="appearance-none min-w-0 w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:placeholder-gray-400"
                 placeholder="Enter your email"
@@ -175,7 +228,7 @@ export default function Footer() {
                   type="submit"
                   className="w-full bg-indigo-600 flex items-center justify-center border border-transparent rounded-md py-2 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                  Subscribe
+                  Subscribe 📩
                 </button>
               </div>
             </form>
