@@ -87,12 +87,12 @@ class ContactCreateView(APIView):
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
             
-# *** Add to TAGs (ACTIVE CAMPAIGN)
+# *** Add to TAGs 'contact' || ACTIVE CAMPAIGN
             url = activecampaign_url + '/api/3/contactTags'
             data = {
                 'contactTag': {
                     'contact': contact_id,
-                    'tag': '2'
+                    'tag': '1'
                 }
             }
             response = requests.post(url, json=data, headers=headers)
@@ -102,7 +102,7 @@ class ContactCreateView(APIView):
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
 
-# *** Add to list (ACTIVE CAMPAIGN)
+# *** Add to list 'master' || ACTIVE CAMPAIGN
             url = activecampaign_url + '/api/3/contactLists'
             data = {
                 'contactList': {
@@ -123,4 +123,125 @@ class ContactCreateView(APIView):
             return Response({'success': 'Message sent successfully'})
         except:
             return Response({'error': 'Message failed to be sent'})
-       
+
+#-------------------------------------------------------------------
+class DemoAddListView(APIView):
+    # list for getting the product
+    def post(self, request, format=None):
+        data = self.request.data
+        email=data['email']
+        first_name=data['name']
+        
+        try:
+            
+# *** CREATE ACTIVE CAMPAIGN CONTACT
+            url = activecampaign_url + '/api/3/contact/sync'
+            data = {
+                'contact': {
+                    'email': email,
+                    'firstName': first_name,
+                }
+            }
+            headers = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Api-Token': activecampaign_key
+            }
+            response = requests.post(url, json=data, headers=headers)
+
+            if response.status_code != 201 and response.status_code != 200:
+                return Response(
+                    {'error': 'Something went wrong when creating contact'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+
+            contact = response.json()
+
+            try:
+                contact_id = str(contact['contact']['id'])
+            except:
+                return Response(
+                    {'error': 'Something went wrong when getting contact ID'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+
+# *** Add TAG 'Contact'
+            url = activecampaign_url + '/api/3/contactTags'
+            data = {
+                'contactTag': {
+                    'contact': contact_id,
+                    'tag': '1'
+                }
+            }
+
+            response = requests.post(url, json=data, headers=headers)
+
+            if response.status_code != 201 and response.status_code != 200:
+                return Response(
+                    {'error': 'Something went wrong when adding tag to contact'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+# *** Add TAG 'entrenamiento'
+            url = activecampaign_url + '/api/3/contactTags'
+            data = {
+                'contactTag': {
+                    'contact': contact_id,
+                    'tag': '2'
+                }
+            }
+
+            response = requests.post(url, json=data, headers=headers)
+
+            if response.status_code != 201 and response.status_code != 200:
+                return Response(
+                    {'error': 'Something went wrong when adding tag to contact'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+
+# *** Add to LIST 'demo prod' || ACTIVE CAMPAIGN
+            url = activecampaign_url + '/api/3/contactLists'
+            data = {
+                'contactList': {
+                    'list': '2',
+                    'contact': contact_id,
+                    'status': '1'
+                }
+            }
+
+            response = requests.post(url, json=data, headers=headers)
+
+            if response.status_code != 201 and response.status_code != 200:
+                return Response(
+                    {'error': 'Something went wrong when adding contact to master list'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+            
+# *** Add to list 'master' || ACTIVE CAMPAIGN
+            url = activecampaign_url + '/api/3/contactLists'
+            data = {
+                'contactList': {
+                    'list': '1',
+                    'contact': contact_id,
+                    'status': '1'
+                }
+            }
+
+            response = requests.post(url, json=data, headers=headers)
+
+            if response.status_code != 201 and response.status_code != 200:
+                return Response(
+                    {'error': 'Something went wrong when adding contact to master list'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+
+
+            return Response(
+                    {'success': 'Contact added to free ebook email list'},
+                    status=status.HTTP_200_OK
+                )
+        except:
+            return Response(
+                {'error': 'Something went wrong on our server'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+     
