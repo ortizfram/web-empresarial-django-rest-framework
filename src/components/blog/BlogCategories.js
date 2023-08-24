@@ -18,7 +18,7 @@ function BlogCategories({get_categories, categories}) {
     <div className="py-10 xl:max-w-7xl xl:mx-auto xl:px-8">
       <div className="px-4 sm:px-6 sm:flex sm:items-center sm:justify-between lg:px-8 xl:px-0">
         <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">View Categories</h2>
-        <Link to="#" className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
+        <Link to="/blog" className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
           Browse all categories<span aria-hidden="true"> &rarr;</span>
         </Link>
       </div>
@@ -57,7 +57,7 @@ function BlogCategories({get_categories, categories}) {
       </div>
 
       <div className="mt-2 px-4 sm:hidden">
-        <Link to="#" className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
+        <Link to="/blog" className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
           Browse all categories<span aria-hidden="true"> &rarr;</span>
         </Link>
       </div>
