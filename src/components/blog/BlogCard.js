@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 function BlogCard(data) {
   let post = data && data.data;
 
+
   return (
     <Link
       to={`/blog/post/${post.slug}`}
@@ -13,8 +14,8 @@ function BlogCard(data) {
         
         <img
           className="h-48 w-full object-cover"
-          src={post.thumbnail ? post.thumbnail : "placeholder-image-url"}
-          alt="Thumbnail"
+          src={post.thumbnail ? post.thumbnail : ''}
+          alt={`${post.thumbnail}`}
         />
       </div>
       <div className="flex-1 bg-white p-6 flex flex-col justify-between">

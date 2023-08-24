@@ -20,23 +20,23 @@ class Post(models.Model):
         ("published", "Published"),
     )
 
-    blog_uuid =     models.UUIDField(default=uuid.uuid4, unique=True)
-    title =          models.CharField(max_length=255)
-    slug =          models.SlugField(unique=True)
+    blog_uuid =         models.UUIDField(default=uuid.uuid4, unique=True)
+    title =             models.CharField(max_length=255)
+    slug =              models.SlugField(unique=True)
     thumbnail =         models.ImageField(upload_to=blog_directory_path)
-    video =          models.FileField(upload_to=blog_directory_path, blank=True, null=True)
-    description =   models.TextField()
-    excerpt =        models.CharField(max_length=100)
+    video =             models.FileField(upload_to=blog_directory_path, blank=True, null=True)
+    description =       models.TextField()
+    excerpt =           models.CharField(max_length=100)
 
     # author =        models.CharField(max_length=255)
-    category =      models.ForeignKey(Category, on_delete=models.PROTECT)
+    category =          models.ForeignKey(Category, on_delete=models.PROTECT)
 
-    published =      models.DateTimeField(default=timezone.now)
+    published =         models.DateTimeField(default=timezone.now)
 
     status =            models.CharField(max_length=10, choices=options, default="draft")
 
-    objects =       models.Manager() #default manager
-    postobjects =   PostObjects()   # custom manager
+    objects =           models.Manager() #default manager
+    postobjects =       PostObjects()   # custom manager
 
     class Meta:
         ordering = ('-published',)
@@ -49,7 +49,7 @@ class Post(models.Model):
             return self.video.url
         return ''
     
-    def get_thumbnail(self):
-        if self.thumbnail:
-            return self.thumbnail.url
+    def get_thumbnail(self, post):
+        if post.thumbnail:
+            return self.context['request'].build_absolute_uri(post.thumbnail.url)
         return ''

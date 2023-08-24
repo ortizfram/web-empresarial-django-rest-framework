@@ -12,7 +12,7 @@ function BlogList({ get_blog_list_page, blog_list, count, category_id }) {
   useEffect(() => {
     get_blog_list();
   }, []);
-
+  
   return (
     <div>
       {blog_list ? (
