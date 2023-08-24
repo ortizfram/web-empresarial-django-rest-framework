@@ -6,8 +6,8 @@ from apps.category.serializers import CategorySerializer
 class PostSerializer(serializers.ModelSerializer):
     # import from django to rest framework JSON
     # reference to model function
-    thumbnail=serializers.CharField(source='get_thumbnail')
     # reference to model function
+    thumbnail = serializers.SerializerMethodField()
     video=serializers.CharField(source='get_video')
     category = CategorySerializer()
     class Meta:
@@ -25,3 +25,6 @@ class PostSerializer(serializers.ModelSerializer):
             'published',
             'status',
         ]
+
+    def get_thumbnail(self, post):
+        return post.get_thumbnail(post)

@@ -14,7 +14,7 @@ function BlogCard(data) {
         
         <img
           className="h-48 w-full object-cover"
-          src={post.thumbnail ? post.thumbnail : ''}
+          src={post.thumbnail}
           alt={`${post.thumbnail}`}
         />
       </div>

@@ -23,7 +23,7 @@ class Post(models.Model):
     blog_uuid =         models.UUIDField(default=uuid.uuid4, unique=True)
     title =             models.CharField(max_length=255)
     slug =              models.SlugField(unique=True)
-    thumbnail =         models.ImageField(upload_to=blog_directory_path)
+    thumbnail =         models.ImageField(upload_to=blog_directory_path, blank=True, null=True)
     video =             models.FileField(upload_to=blog_directory_path, blank=True, null=True)
     description =       models.TextField()
     excerpt =           models.CharField(max_length=100)
@@ -51,5 +51,5 @@ class Post(models.Model):
     
     def get_thumbnail(self, post):
         if post.thumbnail:
-            return self.context['request'].build_absolute_uri(post.thumbnail.url)
+            return post.thumbnail.url
         return ''
