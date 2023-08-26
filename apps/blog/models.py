@@ -55,7 +55,8 @@ class Post(models.Model):
             return self.video.url
         return ''
     
-    def get_thumbnail(self, post):
-        if post.thumbnail:
-            return post.thumbnail.url
+    def get_thumbnail(self):
+        if self.thumbnail:
+            return self.thumbnail.url
         return ''
+

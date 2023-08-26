@@ -27,4 +27,4 @@ class PostSerializer(serializers.ModelSerializer):
         ]
 
     def get_thumbnail(self, post):
-        return post.get_thumbnail(post)
+        return self.instance.get_thumbnail(self.instance)
