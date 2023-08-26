@@ -1,13 +1,19 @@
 from django.db import models
 import uuid
+import os
 from apps.category.models import Category
 from django.utils import timezone
 
 # Create your models here.
 
 
+# def blog_directory_path(instance, filename):
+#     return 'blog/{0}/{1}'.format(instance.title, filename)
 def blog_directory_path(instance, filename):
-    return 'blog/{0}/{1}'.format(instance.title, filename)
+    title = instance.title.replace(" ", "_")  # Replace spaces with underscores
+    title = ''.join(e for e in title if e.isalnum())  # Remove special characters
+    filename = os.path.basename(filename)  # Get the original filename
+    return f'blog/{title}/{uuid.uuid4().hex}_{filename}'
 
 
 class Post(models.Model):
