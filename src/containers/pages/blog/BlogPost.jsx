@@ -19,7 +19,7 @@ function BlogPost({ get_blog, post }) {
         <div className="relative py-16 bg-white overflow-hidden">
           <div className="relative px-4 sm:px-6 lg:px-8">
             <div className="text-lg max-w-prose mx-auto">
-              {/* <img src={post.thumbnail.url} className='w-full h-full p-4' alt="" /> */}
+              {/* <img src="" className='w-full h-full p-4' alt="" /> */}
               <h1>
                 <span className="block text-base text-center text-indigo-600 font-semibold tracking-wide uppercase">
                   {post.category.name}
